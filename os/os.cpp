@@ -1,738 +1,398 @@
-
 #include<iostream>
-#include<time.h>
-#include<string>
-#include<list>
+#include<ctime>
 using namespace std;
-static int num;
-static int chooseNum;
-static int seq[];
+void FCFS(int a[], int n);
+void SSTF(int a[], int n);
+void CopyL(int Sour[], int Dist[], int x); //数组Sour复制到数组Dist，复制到x个数
+//void SetDI(int DiscL[]);  //随机生成磁道数  
+//void Print(int Pri[], int x);  //打印输出数组Pri
+void DelInq(int Sour[], int x, int y);  //数组Sour把x位置的数删除，并把y前面的数向前移动，y后的数保持不变(即会出现2个y) 
+int SCAN(int DiscL[], int n, int x, int y);  //扫描算法(SCAN)
+void CSCAN(int DiscL[],int Han);  //循环扫描算法(CSCAN)
+void FSCAN( int DiscL[],int Han);  //N步扫描算法(NStepScan)
+int main()
+{
+	int n; //磁道的个数
+	int s; //功能号
 
-int fifosum = 0;
-int sstfsum = 0;
-int fifosumN = 0;//平均寻道距离
-int sstfsumN = 0;
+	cout << "请输入当前磁道的个数,按Enter键显示生成的随机磁道号:" << endl;
+	cin >> n;
+	int *a = new int[n];
+	cout << "生成的随机磁道号为：";
+	srand((unsigned)time(NULL));
+	for (int i = 0; i < n; i++) {
+		a[i] = (rand() % 100) + 1;
+		cout << a[i] << " ";
+	}
 
-string fifoseq = "";
-string sstfseq = "";
-string scanseq = "";
-string scanseq_mini = "";
-string cscanseq = "";
-string fscanseq = "";
-string fscanseq1 = "";
-string fscanseq2 = "";
-int scansum = 0;
-int scansum_mini = 0;
-int cscansum = 0;
-int fscansum = 0;
-int fscansum1 = 0;
-int fscansum2 = 0;
+	cout << endl;
+	while (1)
+	{
+		cout << endl;
+		cout << "-----------------------------------------------------" << endl;
+		cout << "|                   磁盘调度算法列表                |" << endl;
+		cout << "|---------------------------------------------------|" << endl;
+		cout << "|              1 先来先服务算法（FCFS)              |" << endl;
+		cout << "|---------------------------------------------------|" << endl;
+		cout << "|              2 最短寻道时间(SSTF)                 |" << endl;
+		cout << "|---------------------------------------------------|" << endl;
+		cout << "|              3 扫描算法(SCAN)                     |" << endl;
+		cout << "|---------------------------------------------------|" << endl;
+		cout << "|              4 循环扫描算法(CSCAN)                |" << endl;
+		cout << "|---------------------------------------------------|" << endl;
+		cout << "|              5 N步SCAN(FSCAN)                     |" << endl;
+		cout << "|---------------------------------------------------|" << endl;
+		cout << "|              0 退出                               |" << endl;
+		cout << "-----------------------------------------------------" << endl;
+		cout << endl;
+		cout << "请选择所需功能的前置编号：";
+		cin >> s;
+		if (s > 5)
+		{
+			cout << "数据输入有误!请重新输入：" << endl;
+		}
+		else {
 
-int scansumN = 0;//平均寻道距离
-int scansum_miniN = 0;
-int cscansumN = 0;
-int fscansumN = 0;
-int fscansum1N = 0;
-int fscansum2N = 0;
+			switch (s) {
+			case 0: exit(0); break;
+			case 1:FCFS(a, n); break;
+			case 2:SSTF(a, n); break;
+			case 3:SCAN(a, n,0,9); break;//默认是10个磁道
+			case 4:CSCAN(a, n); break;
+			case 5:FSCAN(a, n); break;
+			}
+		}
+	}
+	return 0;
+}
 
-list<int> resultofSCAN;//在resultofSCAN里面放的是Integer类型数值
-list<int> resultofCSCAN;
-list<int> resultofFCSCAN;
-list<int> resultofSCAN_mini;
-
-list<int> distanceofSCAN;//ArrayList动态数组
-list<int> distanceofSCAN_mini;
-list<int> distanceofCSCAN;
-
-list<int> temp;
-list<int> seqArrayList;
-
-class  diaodu {
-	disk_scheduling();
+//数组Sour复制到数组Dist，复制到第x个数
+void CopyL(int Sour[], int Dist[], int x)
+{
+	int i;
+	for (i = 0; i <= x; i++)
+	{
+		Dist[i] = Sour[i];
+	}
+}
+//数组Sour把x位置的数删除，并把y前面的数向前移动，y后的数保持不变(即会出现2个y) 
+void DelInq(int Sour[], int x, int y)
+{
+	int i;
+	for (i = x; i<y; i++)
+	{
+		Sour[i] = Sour[i + 1];
+		x++;
+	}
+}
+//先来先服务调度算法(FCFS) 
+void  FCFS(int a[], int n) {
+	int sum = 0, j, i, first = 0, now;
+	cout << "请输入当前磁道号：";
+	cin >> now; //确定当前磁头所在位置
+	cout << "磁盘调度顺序为：" << endl;
+	for (i = 0; i < n; i++)//按访问顺序输出磁道号 
+	{
+		cout << a[i] << " ";
+	}
+	//计算sum
+	for (i = 0, j = 1; j < n; i++, j++)
+	{
+		first += abs(a[j] - a[i]); //外围磁道与最里面磁道的距离
+	}
+	sum += first + abs(now - a[0]);
+	cout << endl;
+	cout << "移动的总磁道数为：" << sum << endl;
+	//float ave;
+	//ave=
+	cout << "平均移动距离为：" << (float)sum / (float)(i + 1) << endl;
 }
 
 
- void disk_scheduling() {
-
-		 void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		//生成随机序列
-		String choose = jTextField7.getText();
-		chooseNum = Integer.parseInt(choose);
-		String numget = jTextField1.getText();
-		num = Integer.parseInt(numget);
-		seq = new int[num];
-		for (int i = 0; i<num; i++)
+//敏短寻道时间算法 （SSTF) 
+void  SSTF(int  a[], int n) {
+	int temp;
+	int k = 1;
+	int now, l, r;
+	int i, j, sum = 0;
+	//将磁道号按递增排序 
+	for (i = 0; i < n; i++)
+		for (j = i + 1; j < n; j++)
 		{
-			double s;
-			s = Math.random() * 200;//产生0~1之间的任意小数，然后*200
-			seq[i] = (int)s;//seq[]里面存放随机序列
-		}
-		String seq_str = "";
-		for (int i = 0; i<num; i++) {
-			seq_str = seq_str + String.valueOf(seq[i]) + " ";
-		}
-		((JTextArea)jTextArea1).setLineWrap(true);//当行长度大于所分配的宽度时，换行
-		((JTextArea)jTextArea1).setText(seq_str);//把随机序列插入到jTextArea1
-
-		int array = 0;
-
-		while (seqArrayList.size()<num)
-		{
-			seqArrayList.add(seq[array]);
-			temp.add(seq[array]);
-			array++;
-		}
-		Collections.sort(temp);//对temp数组的自然序列排序
-							   //调度算法				
-
-		((JTextArea)jTextArea2).setLineWrap(true);
-		String fifoString = String.valueOf(fifosum) + "      " + String.valueOf(fifosumN);
-		((JTextField)jTextField2).setText(fifoString);
-		String sstfString = String.valueOf(sstfsum + "      " + String.valueOf(sstfsumN));
-		((JTextField)jTextField3).setText(sstfString);
-
-		String scanString = String.valueOf(scansum + "      " + String.valueOf(scansumN));
-		((JTextField)jTextField4).setText(scanString);
-
-		String cscanString = String.valueOf(cscansum + "      " + String.valueOf(cscansumN));
-		((JTextField)jTextField5).setText(cscanString);
-
-		String fscanString = String.valueOf(fscansum + "      " + String.valueOf(fscansumN));
-		((JTextField)jTextField6).setText(fscanString);
-		switch (chooseNum)
-		{
-		case 1:
-		{
-			new Thread()
+			if (a[i] > a[j])
 			{
-				public void run()
-			{
-				fifo();
-			}
-			}.start();
-			break;
-		}
-		case 2:
-		{
-			new Thread()
-			{
-				public void run()
-			{
-				sstf();
-			}
-			}.start();
-			break;
-		}
-		case 3:
-		{
-			new Thread()
-			{
-				public void run()
-			{
-				scan();
-			}
-			}.start();
-
-			break;
-		}
-		case 4:
-		{
-			new Thread()
-			{
-				public void run()
-			{
-				cscan();
-			}
-			}.start();
-
-			break;
-		}
-		case 5:
-		{
-			new Thread()
-			{
-				public void run()
-			{
-				fscan();
-			}
-			}.start();
-
-			break;
-		}
-		default:break;
-		}
-		//移动磁道数
-
-
-
-	}
-
-	private void cscan() { //循环扫描算法
-		int position = 0;
-		int start = 100;
-		for (int i = 0; i < temp.size(); i++)
-		{
-			if (temp.get(i)<start)
-			{
-				position = i;
-				continue;
-			}
-			else
-			{
-				resultofCSCAN.add(temp.get(i).intValue());
+				temp = a[i];
+				a[i] = a[j];
+				a[j] = temp;
 			}
 		}
-
-		for (int i = 0; i <= position; i++)
-		{
-			resultofCSCAN.add(temp.get(i).intValue());
-		}
-
-		for (int i = 0; i < resultofCSCAN.size(); i++)
-		{
-			cscanseq = cscanseq + resultofCSCAN.get(i).intValue() + " ";
-			((JTextArea)jTextArea2).setText(((JTextArea)jTextArea2).getText() + " " + cscanseq + "\n");
-			try
-			{
-				Thread.sleep(1500);
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
-		//长度
-		distanceofCSCAN.add(Math.abs(start - resultofCSCAN.get(0).intValue()));
-		for (int i = 1; i <num; i++)
-		{
-			distanceofCSCAN.add(Math.abs(resultofCSCAN.get(i).intValue() - resultofCSCAN.get(i - 1).intValue()));
-
-		}
-		for (int i = 0; i <num; i++)
-		{
-			cscansum += distanceofCSCAN.get(i).intValue();
-		}
-		cscansumN = cscansum / num;
-		String fifoString = String.valueOf(fifosum) + "      " + String.valueOf(fifosumN);
-		((JTextField)jTextField2).setText(fifoString);
-		String sstfString = String.valueOf(sstfsum + "      " + String.valueOf(sstfsumN));
-		((JTextField)jTextField3).setText(sstfString);
-
-		String scanString = String.valueOf(scansum + "      " + String.valueOf(scansumN));
-		((JTextField)jTextField4).setText(scanString);
-
-		String cscanString = String.valueOf(cscansum + "      " + String.valueOf(cscansumN));
-		((JTextField)jTextField5).setText(cscanString);
-
-		String fscanString = String.valueOf(fscansum + "      " + String.valueOf(fscansumN));
-		((JTextField)jTextField6).setText(fscanString);
-	}
-
-	private void scan() {//扫描算法，方向：由里向外
-		int start = 100;
-		int position = 0;
-		for (int i = 0; i < temp.size(); i++)
-		{
-			if (temp.get(i)<start)
-			{
-				position = i;
-				continue;
-			}
-			else
-			{
-				resultofSCAN.add(temp.get(i).intValue());
-			}
-		}
-		for (int i = position; i >= 0; i--) {
-			resultofSCAN.add(temp.get(i).intValue());
-		}
-		for (int i = 0; i < resultofSCAN.size(); i++) {
-			scanseq = scanseq + resultofSCAN.get(i).intValue() + " ";
-			((JTextArea)jTextArea2).setText(((JTextArea)jTextArea2).getText() + " " + scanseq + "\n");
-			try
-			{
-				Thread.sleep(1500);
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
-		//横跨磁道数
-		distanceofSCAN.add(Math.abs(start - resultofSCAN.get(0).intValue()));
-		for (int i = 1; i <num; i++)
-		{
-			distanceofSCAN.add(Math.abs(resultofSCAN.get(i).intValue() - resultofSCAN.get(i - 1).intValue()));
-		}
-		for (int i = 0; i <num; i++)
-		{
-			scansum += distanceofSCAN.get(i).intValue();
-		}
-		scansumN = scansum / num;
-		String fifoString = String.valueOf(fifosum) + "      " + String.valueOf(fifosumN);
-		((JTextField)jTextField2).setText(fifoString);
-		String sstfString = String.valueOf(sstfsum + "      " + String.valueOf(sstfsumN));
-		((JTextField)jTextField3).setText(sstfString);
-
-		String scanString = String.valueOf(scansum + "      " + String.valueOf(scansumN));
-		((JTextField)jTextField4).setText(scanString);
-
-		String cscanString = String.valueOf(cscansum + "      " + String.valueOf(cscansumN));
-		((JTextField)jTextField5).setText(cscanString);
-
-		String fscanString = String.valueOf(fscansum + "      " + String.valueOf(fscansumN));
-		((JTextField)jTextField6).setText(fscanString);
-	}
-
-	private void sstf() {//最短寻道时间优先
-		int begin = 100;
-		int avg = 0;
-		int temp = 1000;
-		int k = 0;
-		int t = num;
-		int j = 0;
-		int sstf[];
-		sstf = new int[num];
-		int sstf_disk[];
-		sstf_disk = new int[num];
-		for (int i = 0; i<num; i++)
-		{
-			sstf[i] = seq[i];
-		}
-		while (t>0)
-		{
-			for (int i = 0; i<num; i++)
-			{
-				if (sstf[i]>0)
-				{
-					if (sstf[i]<begin)
-					{
-						avg = begin - sstf[i];
-						if (temp>avg)
-						{
-							temp = avg;
-							k = i;
-						}
-					}
-					else
-					{
-						avg = sstf[i] - begin;
-						if (temp>avg)
-						{
-							temp = avg;
-							k = i;
-						}
-					}
-				}
-			}
-			sstfseq = sstfseq + (sstf[k] + " ");
-			((JTextArea)jTextArea2).setText(((JTextArea)jTextArea2).getText() + " " + sstfseq + "\n");
-			try
-			{
-				Thread.sleep(1500);
-			}
-			catch (InterruptedException e)
-			{
-			}
-			if (begin>sstf[k])
-			{
-				sstf_disk[j] = begin - sstf[k];
-			}
-			else
-			{
-				sstf_disk[j] = sstf[k] - begin;
-			}
-			j++;
-			begin = sstf[k];
-			sstf[k] = -1;
-			t--;
-			avg = 0;
-			k = 0;
-			temp = 10000;
-		}
-		for (int i = 0; i<num; i++)
-		{
-			sstfsum = sstfsum + sstf_disk[i];
-		}
-		sstfsumN = sstfsum / num;
-		String fifoString = String.valueOf(fifosum) + "      " + String.valueOf(fifosumN);
-		((JTextField)jTextField2).setText(fifoString);
-		String sstfString = String.valueOf(sstfsum + "      " + String.valueOf(sstfsumN));
-		((JTextField)jTextField3).setText(sstfString);
-
-		String scanString = String.valueOf(scansum + "      " + String.valueOf(scansumN));
-		((JTextField)jTextField4).setText(scanString);
-
-		String cscanString = String.valueOf(cscansum + "      " + String.valueOf(cscansumN));
-		((JTextField)jTextField5).setText(cscanString);
-
-		String fscanString = String.valueOf(fscansum + "      " + String.valueOf(fscansumN));
-		((JTextField)jTextField6).setText(fscanString);
-	}
-
-	private void fscan()//N-Step-SCAN算法的简化。它只将磁盘请求队列分成两个子队列。			                      
-	{                        //队列之间fifo,队列内部scan
-		int begin = 100;
-		int avg = 0;
-		int fscan1[];
-		int fscan2[];
-		int a = num / 2;
-		int b = num - num / 2;
-		fscan1 = new int[a];
-		fscan2 = new int[b];
-		for (int i = 0; i<a; i++)
-		{
-			fscan1[i] = seq[i];
-		}
-		scan_mini(fscan1,a);
-		for (int i = 0; i < resultofSCAN_mini.size(); i++)
-		{
-			fscanseq1 = fscanseq1 + resultofSCAN_mini.get(i).intValue() + " ";
-			((JTextArea)jTextArea2).setText(((JTextArea)jTextArea2).getText() + " " + fscanseq1 + "\n");
-			try
-			{
-				Thread.sleep(1500);
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
-		fscansum1 = scansum_mini;
-		scansum_mini = 0;//清零
-		resultofSCAN_mini.clear();//清零
-		for (int i = 0; i<b; i++)
-		{
-			fscan2[i] = seq[a + i];
-		}
-		scan_mini(fscan2,b);
-		for (int i = 0; i < resultofSCAN_mini.size(); i++)
-		{
-			fscanseq2 = fscanseq2 + resultofSCAN_mini.get(i).intValue() + " ";
-			((JTextArea)jTextArea2).setText(((JTextArea)jTextArea2).getText() + " " + fscanseq2 + "\n");
-			try
-			{
-				Thread.sleep(1500);
-			}
-			catch (InterruptedException e)
-			{
-			}
-		}
-		fscansum2 = scansum_mini;
-		fscansum = fscansum1 + fscansum2;
-		fscansumN = fscansum / num;
-		String fifoString = String.valueOf(fifosum) + "      " + String.valueOf(fifosumN);
-		((JTextField)jTextField2).setText(fifoString);
-		String sstfString = String.valueOf(sstfsum + "      " + String.valueOf(sstfsumN));
-		((JTextField)jTextField3).setText(sstfString);
-
-		String scanString = String.valueOf(scansum + "      " + String.valueOf(scansumN));
-		((JTextField)jTextField4).setText(scanString);
-
-		String cscanString = String.valueOf(cscansum + "      " + String.valueOf(cscansumN));
-		((JTextField)jTextField5).setText(cscanString);
-
-		String fscanString = String.valueOf(fscansum + "      " + String.valueOf(fscansumN));
-		((JTextField)jTextField6).setText(fscanString);
-	}
-	private void scan_mini(int a[],int n)
+	cout << "按递增顺序排好的磁道显示为 ：" << endl;
+	for (i = 0; i < n; i++)
 	{
-		Arrays.sort(a);
-		int start = 100;
-		int position = 0;
-		if (a[0] >= start)
+		cout << a[i] << " "; //输出排好的磁道顺序
+	}
+	cout << endl;
+	cout << "请输入当前的磁道号 ：";
+	cin >> now;//确定当前磁头所在位置
+	cout << "磁盘调度顺序为:" << endl;
+	if (a[n - 1] <= now)//当前磁头位置大于最外围欲访问磁道
+	{
+		for (i = n - 1; i >= 0; i--)
+			cout << a[i] << " ";
+		sum = now - a[0];
+	}
+	else
+		if (a[0] >= now)//当前磁头位置小于最里欲访问磁道
 		{
-			for (int i = 0; i < n; i++)
-				resultofSCAN_mini.add(a[i]);
-		}
-		else if (a[0] <= start)
-		{
-			for (int i = n - 1; i >= 0; i--)
-				resultofSCAN_mini.add(a[i]);
+			for (i = 0; i < n; i++)
+				cout << a[i] << " ";
+			sum = a[n - 1] - now;
 		}
 		else
 		{
-			for (int i = 0; i < n; i++)
+			while (a[k] < now)//确定当前磁道在己排的序列中的位置
 			{
-				if (a[i] < start)
-					position = i;
-				break;
+				k++;
 			}
-			for (int i = position; i < n; i++)
+			l = k - 1;//在磁头位置的前一个欲访问磁道
+			r = k; //磁头欲访问磁道
+			while ((l >= 0) && (r < n))
 			{
-				resultofSCAN_mini.add(a[i]);
-			}
-			for (int i = position; i >= 0; i--)
-			{
-				resultofSCAN_mini.add(a[i]);
-			}
-		}
-		for (int i = 0; i < resultofSCAN_mini.size(); i++)
-		{
-			scanseq_mini = scanseq_mini + resultofSCAN_mini.get(i).intValue() + " ";
-		}
-		//横跨磁道数
-		distanceofSCAN_mini.add(Math.abs(start - resultofSCAN_mini.get(0).intValue()));
-		for (int i = 1; i <n; i++)
-		{
-			distanceofSCAN_mini.add(Math.abs(resultofSCAN_mini.get(i).intValue() - resultofSCAN_mini.get(i - 1).intValue()));
-		}
-		for (int i = 0; i <n; i++)
-		{
-			scansum_mini += distanceofSCAN_mini.get(i).intValue();
-		}
-	}
-
-	private void fifo() {
-		// TODO Auto-generated method stub
-		int begin = 100;
-		int avg = 0;
-		int fifo[];
-		fifo = new int[num];
-		for (int i = 0; i<num; i++) {
-			fifo[i] = seq[i];
-			fifoseq = fifoseq + String.valueOf(seq[i]) + " ";
-			((JTextArea)jTextArea2).setText(((JTextArea)jTextArea2).getText() + " " + fifoseq + "\n");
-			try
-			{
-				Thread.sleep(1500);
-			}
-			catch (InterruptedException e)
-			{
-			}
-
-		}
-		for (int i = 0; i<num; i++) {
-			if (fifo[i]<begin) {
-				avg = begin - fifo[i];
-			}
-			else {
-				avg = fifo[i] - begin;
-			}
-			begin = fifo[i];
-			fifosum = fifosum + avg;
-			fifosumN = fifosum / num;
-		}
-		String fifoString = String.valueOf(fifosum) + "      " + String.valueOf(fifosumN);
-		((JTextField)jTextField2).setText(fifoString);
-		String sstfString = String.valueOf(sstfsum + "      " + String.valueOf(sstfsumN));
-		((JTextField)jTextField3).setText(sstfString);
-
-		String scanString = String.valueOf(scansum + "      " + String.valueOf(scansumN));
-		((JTextField)jTextField4).setText(scanString);
-
-		String cscanString = String.valueOf(cscansum + "      " + String.valueOf(cscansumN));
-		((JTextField)jTextField5).setText(cscanString);
-
-		String fscanString = String.valueOf(fscansum + "      " + String.valueOf(fscansumN));
-		((JTextField)jTextField6).setText(fscanString);
-	}
-	});
-	jButton2.addActionListener(new ActionListener(){//按钮“重置”
-		public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		jTextField1.setText("");
-		((JTextArea)jTextArea1).setText("");
-		((JTextArea)jTextArea2).setText("");
-		jTextField2.setText("");
-		jTextField3.setText("");
-		jTextField4.setText("");
-		jTextField5.setText("");
-		jTextField6.setText("");
-		jTextField7.setText("");
-		fifosum = 0;
-		fscansum = 0;
-		sstfsum = 0;
-		scansum = 0;
-		scansum_mini = 0;
-		cscansum = 0;
-		chooseNum = 0;
-		sstfseq = "";
-
-		fifosum = 0;
-		sstfsum = 0;
-		fifosumN = 0;//平均寻道距离
-		sstfsumN = 0;
-
-		sstfseq = "";
-		scanseq = "";
-		scanseq_mini = "";
-		cscanseq = "";
-		fscanseq = "";
-		fscanseq1 = "";
-		fscanseq2 = "";
-
-		scansum = 0;
-		scansum_mini = 0;
-		cscansum = 0;
-		fscansum = 0;
-		fscansum1 = 0;
-		fscansum2 = 0;
-
-		scansumN = 0;//平均寻道距离
-		scansum_miniN = 0;
-		cscansumN = 0;
-		fscansumN = 0;
-		fscansum1N = 0;
-		fscansum2N = 0;
-
-		resultofSCAN.clear();
-		resultofCSCAN.clear();
-		resultofFCSCAN.clear();
-		resultofSCAN_mini.clear();
-	}
-	});
-}
-
-private void initGUI() {
-	try {
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		this.setName("frame1");
-		this.setTitle("\u78c1\u76d8\u8c03\u5ea6");//磁盘调度
-		{
-			jPanel1 = new JPanel();
-			getContentPane().add(jPanel1, BorderLayout.CENTER);
-			jPanel1.setPreferredSize(new java.awt.Dimension(439, 679));//设置此组件的首选大小 439 679
-			{
-				jLabel1 = new JLabel();
-				jPanel1.add(jLabel1);
-				jLabel1.setText("\u8bf7\u8f93\u5165\u5e8f\u5217\u957f\u5ea6\uff1a");//请输入序列长度：
-				jLabel1.setPreferredSize(new java.awt.Dimension(108, 15));//108 15
-			}
-			{
-				jTextField1 = new JTextField();
-				jPanel1.add(jTextField1);
-				jTextField1.setPreferredSize(new java.awt.Dimension(91, 22));//91
-			}
-			{
-				jLabel10 = new JLabel();
-				jPanel1.add(jLabel10);
-				jLabel10.setText("\u8bf7\u9009\u62e9\u8c03\u5ea6\u7b97\u6cd5\uff1a");//请输入序列长度：
-				jLabel10.setPreferredSize(new java.awt.Dimension(108, 15));//108 15
-			}
-			{
-				jTextField7 = new JTextField();
-				jPanel1.add(jTextField7);
-				jTextField7.setPreferredSize(new java.awt.Dimension(91, 22));//91
-			}
-			{
-				jButton1 = new JButton();
-				jPanel1.add(jButton1);
-				jButton1.setText("\u5f00\u59cb");//开始
-				jButton1.setPreferredSize(new java.awt.Dimension(91, 22));
-			}
-			{
-				jButton2 = new JButton();
-				jPanel1.add(jButton2);
-				jButton2.setText("\u91cd\u7f6e");//重置
-				jButton2.setPreferredSize(new java.awt.Dimension(84, 22));
-			}
-			{
-				jLabel2 = new JLabel();
-				jPanel1.add(jLabel2);
-				jLabel2.setText("\u8bf7\u6c42\u5e8f\u5217\uff1a");//请求序列：
-				jLabel2.setPreferredSize(new java.awt.Dimension(366, 15));//366
-			}
-			{
-				jScrollPane1 = new JScrollPane();
-				jPanel1.add(jScrollPane1);
-				jScrollPane1.setPreferredSize(new java.awt.Dimension(365, 133));
+				if ((now - a[l]) <= (a[r] - now))//选择离磁头近的磁道
 				{
-					jTextArea1 = new JTextArea();
-					jScrollPane1.setViewportView(jTextArea1);
-					jTextArea1.setPreferredSize(new java.awt.Dimension(434, 239));
+					cout << a[l] << " ";
+					sum += now - a[l];
+					now = a[l];
+					l = l - 1;
+				}
+				else
+				{
+					cout << a[r] << " ";
+					sum += a[r] - now;
+					now = a[r];
+					r = r + 1;
 				}
 			}
+			if (l = -1)//磁头位置里侧的磁道己访问完 
 			{
-				jLabel3 = new JLabel();
-				jPanel1.add(jLabel3);
-				jLabel3.setText("\u670d\u52a1\u5e8f\u5217\uff1a(\u8d77\u59cb\u78c1\u9053\u4e3a100)");//服务序列：(起始磁道为100)
-				jLabel3.setPreferredSize(new java.awt.Dimension(370, 15));
-			}
-			{
-				jScrollPane2 = new JScrollPane();
-				jPanel1.add(jScrollPane2);
-				jScrollPane2.setPreferredSize(new java.awt.Dimension(367, 150));
+				for (j = r; j < n; j++)//访问磁头位置外侧的磁道
 				{
-					jTextArea2 = new JTextArea();
-					jScrollPane2.setViewportView(jTextArea2);
-					jTextArea2.setPreferredSize(new java.awt.Dimension(437, 390));
+					cout << a[j] << " ";
 				}
+				sum += a[n - 1] - a[0];
 			}
+			if (r == n)//磁头位置外侧的磁道己访问完 
 			{
-				jLabel4 = new JLabel();
-				jPanel1.add(jLabel4);
-				jLabel4.setText("\u79fb\u52a8\u78c1\u9053\u6570\u548c\u5e73\u5747\u79fb\u52a8\u8ddd\u79bb\uff1a");//移动磁道数和平均移动距离：
-				jLabel4.setPreferredSize(new java.awt.Dimension(364, 15));
-			}
-			{
-				jLabel5 = new JLabel();
-				jPanel1.add(jLabel5);
-				jLabel5.setText("1. FIFO\uff1a");//FIFO:
-				jLabel5.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jTextField2 = new JTextField();
-				jPanel1.add(jTextField2);
-				jTextField2.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jLabel6 = new JLabel();
-				jPanel1.add(jLabel6);
-				jLabel6.setText("2. SSTF\uff1a");//SSTF:
-				jLabel6.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jTextField3 = new JTextField();
-				jPanel1.add(jTextField3);
-				jTextField3.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jLabel7 = new JLabel();
-				jPanel1.add(jLabel7);
-				jLabel7.setText("3. SCAN\uff1a");//SCAN:
-				jLabel7.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jTextField4 = new JTextField();
-				jPanel1.add(jTextField4);
-				jTextField4.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jLabel8 = new JLabel();
-				jPanel1.add(jLabel8);
-				jLabel8.setText("4. C-SCAN\uff1a");//C-SCAN:
-				jLabel8.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jTextField5 = new JTextField();
-				jPanel1.add(jTextField5);
-				jTextField5.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jLabel9 = new JLabel();
-				jPanel1.add(jLabel9);
-				jLabel9.setText("5. F-SCAN\uff1a");//F-SCAN:
-				jLabel9.setPreferredSize(new java.awt.Dimension(368, 22));
-			}
-			{
-				jTextField6 = new JTextField();
-				jPanel1.add(jTextField6);
-				jTextField6.setPreferredSize(new java.awt.Dimension(368, 22));
+				for (j = k - 1; j > -1; j--)//访问磁头位置里侧的磁道
+				{
+					cout << a[j] << " ";
+				}
+				sum += a[n - 1] - a[0];
 			}
 		}
-		pack();
-		this.setSize(500, 750);//447
-	}
-	catch (Exception e) {
-		//add your error handling code here
-		e.printStackTrace();
-	}
+	cout << endl;
+	cout << "移动的总道数为 ：" << sum << endl;
+	cout << "平均移动距离为：" << (float)sum / (float)i << endl;
 }
 
+int NAll = 0;
+int Best[5][2]; //用作寻道长度由低到高排序时存放的数组 
+int Jage;
+float Aver = 0;
+// 扫描算法(SCAN)
+int SCAN(int DiscL[], int Han, int x, int y)
+{
+	int j, n, k, h, m, All;
+	int t = 0;
+	int Temp;
+	int Min;
+	int RLine[10]; //将随机生成的磁道数数组Discl[]复制给数组RLine[] 
+	int Order;
+	Order = 1;
+	k = y;
+	m = 2;  //控制while语句的执行，即是一定要使当前磁道向内向外都要扫描到
+	All = 0;  //统计全部的磁道数变量
+	CopyL(DiscL, RLine, 9);  //复制磁道号到临时数组RLine
+	cout<<"按照SCAN算法磁道的访问顺序为:"<<endl;
+	Min = 64000;
+	for (j = x; j <= y; j++)  //寻找与当前磁道号最短寻道的时间的磁道号
+	{
+		if (RLine[j]>Han)  //如果第一个随机生成的磁道号大于当前的磁道号，执行下一句
+			Temp = RLine[j] - Han;  //求出临时的移动距离
+		else
+			Temp = Han - RLine[j];  //求出临时的移动距离
+		if (Temp<Min)
+		{
+			Min = Temp;  //Temp临时值赋予Min
+			h = j;   //把最近当前磁道号的数组下标赋予h
+		}
+	}
+	All = All + Min;
+	cout<<RLine[h];
+	if (RLine[h] >= Han) {  //判断磁道的移动方向，即是由里向外还是由外向里
+		Order = 0;
+		t = 1;
+	}
+	Han = RLine[h];
+	DelInq(RLine, h, k);  //每个磁道数向前移动一位
+	k--;
+	while (m>0)
+	{
+		if (Order == 1)  //order是判断磁盘扫描的方向标签，order是1的话，磁道向内移动
+		{
+			for (j = x; j <= y; j++)
+			{
+				h = -1;
+				Min = 64000;
+				for (n = x; n <= k; n++)  //判断离当前磁道最近的磁道号
+				{
+					if (RLine[n] <= Han)
+					{
+						Temp = Han - RLine[n];
+						if (Temp<Min)
+						{
+							Min = Temp;  //Temp临时值赋予Min
+							h = n;  //把最近当前磁道号的数组下标赋予h
+						}
+					}
+				}
+				if (h != -1)
+				{
+					All = All + Min;  //叠加移动距离
+					cout<<"  "<<RLine[h];
+					Han = RLine[h]; //最近的磁道号作为当前磁道
+					DelInq(RLine, h, k);
+					k--;
+				}
+			}
+			Order = 0;  //当完成向内的移动，order赋予0，执行else语句，使磁道向外移动
+			m--;  //向内完成一次，m减一次，保证while循环执行两次
+		}
+		else  //order是0的话，磁道向外移动
+		{
+			for (j = x; j <= y; j++)
+			{
+				h = -1;
+				Min = 64000;
+				for (n = x; n <= k; n++)  //判断离当前磁道最近的磁道号
+				{
+					if (RLine[n] >= Han)
+					{
+						Temp = RLine[n] - Han;
+						if (Temp<Min)
+						{
+							Min = Temp;   //Temp临时值赋予Min
+							h = n;  //把最近当前磁道号的数组下标赋予h
+						}
+					}
+				}
+				if (h != -1)
+				{
+					All = All + Min;  //叠加移动距离
+					cout << "  " << RLine[h];
+					Han = RLine[h];  //最近的磁道号作为当前磁道
+					DelInq(RLine, h, k);
+					k--;
+				}
+			}
+			Order = 1;  //当完成向内的移动，order赋予0，执行else语句，使磁道向外移动
+			m--;   //向内完成一次，m减一次，保证while循环执行两次
+		}
+	}
+	NAll = NAll + All;
+	if ((y - x)>5)
+	{
+		Best[Jage][1] = All;//Best[][1]存放移动磁道数 
+		Best[Jage][0] = 3;//Best[][0]存放算法的序号为:3
+		Jage++;//排序序号加1
+		Aver = ((float)All) / 10;//求平均寻道次数 
+		cout << endl << "移动磁道数:" << All;
+		cout << endl << "平均寻道长度:"<<Aver;
+	}
+	if (t == 1) cout<<endl<<"磁道由内向外移动";
+	else cout<<endl<<"磁道由外向内移动";
+	return(Han);
 }
-
-void main() {
-
-	diaodu inst = new diaodu();
-
+//循环扫描算法(CSCAN)
+void CSCAN(int DiscL[], int Han)
+{
+	int j, h, n, Temp, m, k, All, Last, i;
+	int RLine[10];  //将随机生成的磁道数数组Discl[]复制给数组RLine[] 
+	int Min;
+	int tmp = 0;
+	m = 2;
+	k = 9;
+	All = 0;   //统计全部的磁道数变量
+	Last = Han;
+	CopyL(DiscL, RLine, 9);  //复制磁道号到临时数组RLine
+	cout<<"按照CSCAN算法磁道的访问顺序为:"<<endl;
+	while (k >= 0)
+	{
+		for (j = 0; j <= 9; j++)  //从当前磁道号开始，由内向外搜索离当前磁道最近的磁道号
+		{
+			h = -1;
+			Min = 64000;
+			for (n = 0; n <= k; n++)
+			{
+				if (RLine[n] >= Han)
+				{
+					Temp = RLine[n] - Han;
+					if (Temp<Min)
+					{
+						Min = Temp;
+						h = n;
+					}
+				}
+			}
+			if (h != -1)
+			{
+				All = All + Min;  //统计一共移动的距离
+				cout << "  " << RLine[h];
+				Han = RLine[h];
+				Last = RLine[h];
+				DelInq(RLine, h, k);
+				k--;
+			}
+		}
+		if (k >= 0)
+		{
+			tmp = RLine[0];
+			for (i = 0; i<k; i++)//算出剩下磁道号的最小值
+			{
+				if (tmp>RLine[i]) tmp = RLine[i];
+			}
+			Han = tmp;//把最小的磁道号赋给Han
+			Temp = Last - tmp;//求出最大磁道号和最小磁道号的距离差
+			All = All + Temp;
+		}
+	}
+	Best[Jage][1] = All;//Best[][1]存放移动磁道数 
+	Best[Jage][0] = 4;//Best[][0]存放算法的序号为:4
+	Jage++;//排序序号加1
+	Aver = ((float)All) / 10;//求平均寻道次数 
+	cout << endl << "移动磁道数:" << All;
+	cout << endl << "平均寻道长度: " << Aver;
+}
+//N步扫描算法(NStepScan)
+void FSCAN(int DiscL[], int Han1)
+{
+	int i, m, k;
+	int RLine1[10];
+	NAll = 0;
+	m = 2;
+	k = 9;  //限定10个的磁道数  
+	i = -1;
+	CopyL(DiscL, RLine1, 9);  //复制磁道号到临时数组RLine
+	cout<<endl<<"按照FSCAN算法磁道的访问顺序为:";
+	for (m = 0; m < 2; m++)  //由于限定10磁道数，将10个磁道数分为两组，每组5个磁道数，每个组按照SCAN算法执行，该循环循环2次
+	{
+		Han1 = SCAN(RLine1, Han1, i + 1, i + 5);
+		i = i + 5;
+	}
+	Best[Jage][1] = NAll;//Best[][1]存放移动磁道数 
+	Best[Jage][0] = 5;//Best[][0]存放算法的序号为:5
+	Aver = ((float)NAll) / 10;//求平均寻道次数 
+	cout<<endl<<"移动磁道数:"<< NAll;
+	cout<<endl<< "平均寻道长度: "<<Aver;
 
 }
