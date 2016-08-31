@@ -336,7 +336,7 @@ int SCAN(int a[],int n, int x, int y)
 				h = j;   //把最近当前磁道号的数组下标赋予h
 			}
 		}
-		All = All - Max;
+		All = All + Max;
 	}
 
 	cout<<b[h];
@@ -468,15 +468,15 @@ void CSCAN(int a[], int n)
 	int Min;
 	int tmp = 0;
 	m = 2;
-	k = 9;
+	k = n-1;
 	All = 0;   //统计全部的磁道数变量
 	Last = now;
-	CopyL(a, b, 9);  //复制磁道号到临时数组b
+	CopyL(a, b, n);  //复制磁道号到临时数组b
 	cout<<"按照CSCAN算法磁道的访问顺序为:"<<endl;
 	fprintf(fp, "按照CSCAN算法磁道的访问顺序为:\n");
 	while (k >= 0)
 	{
-		for (j = 0; j <= 9; j++)  //从当前磁道号开始，由内向外搜索离当前磁道最近的磁道号
+		for (j = 0; j <= n; j++)  //从当前磁道号开始，由内向外搜索离当前磁道最近的磁道号
 		{
 			h = -1;
 			Min = 64000;
