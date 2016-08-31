@@ -63,7 +63,7 @@ int main()
 			case 0: exit(0); break;
 			case 1:FCFS(a, n); break;
 			case 2:SSTF(a, n); break;
-			case 3:SCAN(a, n,0,9); break;//默认是10个磁道
+			case 3:SCAN(a, n,0,n); break;//默认是10个磁道
 			case 4:CSCAN(a, n); break;
 			case 5:FSCAN(a, n); break;
 			}
@@ -297,29 +297,57 @@ int SCAN(int a[],int n, int x, int y)
 	m = 2;  //控制while语句的执行，即是一定要使当前磁道向内向外都要扫描到
 	All = 0;  //统计全部的磁道数变量
 	CopyL(a, b, n);  //复制磁道号到临时数组b
+	cout << "输入当前磁头的移动方向,0为向外，1为向内" << endl;
+	{
+		cin >> Order;
+		if (Order == 0)t = 1;
+		else t = 0;
+	}
 	cout<<"按照SCAN算法磁道的访问顺序为:"<<endl;
 	fprintf(fp, "按照SCAN算法磁道的访问顺序为:\n");
 	Min = 64000;
-	for (j = x; j <= y; j++)  //寻找与当前磁道号最短寻道的时间的磁道号
-	{
-		if (b[j]>sum)  //如果第一个随机生成的磁道号大于当前的磁道号，执行下一句
-			Temp = b[j] - sum;  //求出临时的移动距离
-		else
-			Temp = sum - b[j];  //求出临时的移动距离
-		if (Temp<Min)
+	int Max = 65535;
+	if (Order == 1) {
+		for (j = x; j <= y; j++)  //寻找与当前磁道号最短寻道的时间的磁道号
 		{
-			Min = Temp;  //Temp临时值赋予Min
-			h = j;   //把最近当前磁道号的数组下标赋予h
+			if (b[j] > now&&Order == 1)  //如果第一个随机生成的磁道号大于当前的磁道号，执行下一句
+				Temp = b[j] - now;  //求出临时的移动距离
+			else
+				Temp = now - b[j];  //求出临时的移动距离
+			if (Temp < Min)
+			{
+				Min = Temp;  //Temp临时值赋予Min
+				h = j;   //把最近当前磁道号的数组下标赋予h
+			}
 		}
+		All = All + Min;
 	}
-	All = All + Min;
+	else  //order是0的话，磁道向外移动
+	{
+		for (j = x; j <= n; j++)  //寻找与当前磁道号最短寻道的时间的磁道号
+		{
+			//if (b[j] >= now)  //如果第一个随机生成的磁道号大于当前的磁道号，执行下一句
+				//Temp = b[j] - now;  //求出临时的移动距离
+			//else
+				Temp = b[j] - now;
+			if (Temp >= 0&&Temp<=Max)
+			{
+				Max = Temp;  //Temp临时值赋予Min
+				h = j;   //把最近当前磁道号的数组下标赋予h
+			}
+		}
+		All = All - Max;
+	}
+
 	cout<<b[h];
 		fprintf(fp, "%d",b[h]);
-	if (b[h] >= sum) {  //判断磁道的移动方向，即是由里向外还是由外向里
+	/*(if (b[h] >= now) {  //判断磁道的移动方向，即是由里向外还是由外向里
 		Order = 0;
 		t = 1;
-	}
-	sum = b[h];
+	}*/
+		//磁道移动方向
+
+	now = b[h];
 	DelInq(b, h, k);  //每个磁道数向前移动一位
 	k--;
 	while (m>0)
@@ -332,9 +360,9 @@ int SCAN(int a[],int n, int x, int y)
 				Min = 64000;
 				for (l = x; l <= k; l++)  //判断离当前磁道最近的磁道号
 				{
-					if (b[l] <= sum)
+					if (b[l] <= now)
 					{
-						Temp = sum - b[l];
+						Temp = now - b[l];
 						if (Temp<Min)
 						{
 							Min = Temp;  //Temp临时值赋予Min
@@ -347,7 +375,7 @@ int SCAN(int a[],int n, int x, int y)
 					All = All + Min;  //叠加移动距离
 					cout<<"  "<<b[h];
 						fprintf(fp, "%s%d", " ",b[h]);
-					sum = b[h]; //最近的磁道号作为当前磁道
+					now = b[h]; //最近的磁道号作为当前磁道
 					DelInq(b, h, k);
 					k--;
 				}
@@ -363,9 +391,9 @@ int SCAN(int a[],int n, int x, int y)
 				Min = 64000;
 				for (l = x; l <= k; l++)  //判断离当前磁道最近的磁道号
 				{
-					if (b[l] >= sum)
+					if (b[l] >= now)
 					{
-						Temp = b[l] - sum;
+						Temp = b[l] - now;
 						if (Temp<Min)
 						{
 							Min = Temp;   //Temp临时值赋予Min
@@ -378,7 +406,7 @@ int SCAN(int a[],int n, int x, int y)
 					All = All + Min;  //叠加移动距离
 					cout << "  " << b[h];
 						fprintf(fp, "%s%d:", " ", b[h]);
-					sum = b[h];  //最近的磁道号作为当前磁道
+					now = b[h];  //最近的磁道号作为当前磁道
 					DelInq(b, h, k);
 					k--;
 				}
@@ -503,7 +531,7 @@ void FSCAN(int a[], int n)
 	if (!fp)
 	{
 		strcat("cipan", ".txt");
-		fp = fopen("cipan.txt", "w");//写
+		fp = fopen("cipan.t                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              xt", "w");//写
 	}
 	fprintf(fp, "当前的磁盘调度方式为FSCAN,磁盘请求序列为:\n");
 	for (int num = 0; num < n; num++)
