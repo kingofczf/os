@@ -106,19 +106,19 @@ void  FCFS(int a[], int n) {
 	fprintf(fp, "当前的磁盘调度方式为FIFO,磁盘请求序列为:\n");
 	for (int num = 0; num < n; num++)
 	{
-		fprintf(fp,"\%d\%s",a[num]," ");
+		fprintf(fp,"%d%s",a[num]," ");
 	}
 	fprintf(fp,"\n");
 	int sum = 0, j, i, first = 0, now;
 	cout << "请输入当前磁道号：";
 	cin >> now; //确定当前磁头所在位置
-	fprintf(fp, "当前磁道号:\%d\n",now);
+	fprintf(fp, "当前磁道号:%d\n",now);
 	cout << "磁盘调度顺序为:" << endl;
 	fprintf(fp, "磁盘调度顺序为:\n");
 	for (i = 0; i < n; i++)//按访问顺序输出磁道号 
 	{
 		cout << a[i] << " ";
-		fprintf(fp, "\%d\%s",a[i]," ");
+		fprintf(fp, "%d%s",a[i]," ");
 	}
 	//计算sum
 	for (i = 0, j = 1; j < n; i++, j++)
@@ -129,9 +129,9 @@ void  FCFS(int a[], int n) {
 	cout << endl;
 	fprintf(fp,"\n");
 	cout << "移动的总磁道数为：" << sum << endl;
-	fprintf(fp, "移动的总磁道数为:\%d\n",sum);
+	fprintf(fp, "移动的总磁道数为:%d\n",sum);
 	cout << "平均移动距离为：" << (float)sum / (float)(i + 1) << endl;
-	fprintf(fp,"平均移动距离为：\%f\n", (float)sum/ (float)(i + 1)); 
+	fprintf(fp,"平均移动距离为：%f\n", (float)sum/ (float)(i + 1)); 
 	fprintf(fp, "\n");
 	fclose(fp);
 }
@@ -152,7 +152,7 @@ void  SSTF(int  a[], int n) {
 	fprintf(fp, "当前的磁盘调度方式为SSTF,磁盘请求序列为:\n");
 	for (int num = 0; num < n; num++)
 	{
-		fprintf(fp, "\%d\%s", a[num], " ");
+		fprintf(fp, "%d%s", a[num], " ");
 	}
 	fprintf(fp, "\n");
 	int temp;
@@ -175,13 +175,13 @@ void  SSTF(int  a[], int n) {
 	for (i = 0; i < n; i++)
 	{
 		cout << a[i] << " "; //输出排好的磁道顺序
-		fprintf(fp, "\%d\%s",a[i]," ");
+		fprintf(fp, "%d%s",a[i]," ");
 	}
 	cout << endl;
 	fprintf(fp, "\n");
 	cout << "请输入当前的磁道号 ：";
 	cin >> now;//确定当前磁头所在位置
-	fprintf(fp, "当前磁道号：\%d",now);
+	fprintf(fp, "当前磁道号：%d",now);
 	cout << "磁盘调度顺序为:" << endl;
 	fprintf(fp, "当磁盘调度顺序为:");
 	if (a[n - 1] <= now)//当前磁头位置大于最外围欲访问磁道
@@ -189,7 +189,7 @@ void  SSTF(int  a[], int n) {
 		for (i = n - 1; i >= 0; i--)
 		{
 			cout << a[i] << " ";
-			fprintf(fp,"\%d\%s",a[i]," ");
+			fprintf(fp,"%d%s",a[i]," ");
 		}
 		sum = now - a[0];
 	}
@@ -199,7 +199,7 @@ void  SSTF(int  a[], int n) {
 			for (i = 0; i < n; i++)
 			{
 				cout << a[i] << " ";
-				fprintf(fp, "\%d\%s", a[i], " ");
+				fprintf(fp, "%d%s", a[i], " ");
 			}
 			sum = a[n - 1] - now;
 		}
@@ -216,7 +216,7 @@ void  SSTF(int  a[], int n) {
 				if ((now - a[l]) <= (a[r] - now))//选择离磁头近的磁道
 				{
 					cout << a[l] << " ";
-					fprintf(fp, "\%d\%s", a[l], " ");
+					fprintf(fp, "%d%s", a[l], " ");
 					sum += now - a[l];
 					now = a[l];
 					l = l - 1;
@@ -224,7 +224,7 @@ void  SSTF(int  a[], int n) {
 				else
 				{
 					cout << a[r] << " ";
-					fprintf(fp, "\%d\%s", a[r], " ");
+					fprintf(fp, "%d%s", a[r], " ");
 					sum += a[r] - now;
 					now = a[r];
 					r = r + 1;
@@ -235,7 +235,7 @@ void  SSTF(int  a[], int n) {
 				for (j = r; j < n; j++)//访问磁头位置外侧的磁道
 				{
 					cout << a[j] << " ";
-					fprintf(fp, "\%d\%s", a[j], " ");
+					fprintf(fp, "%d%s", a[j], " ");
 				}
 				sum += a[n - 1] - a[0];
 			}
@@ -244,7 +244,7 @@ void  SSTF(int  a[], int n) {
 				for (j = k - 1; j > -1; j--)//访问磁头位置里侧的磁道
 				{
 					cout << a[j] << " ";
-					fprintf(fp, "\%d\%s", a[j], " ");
+					fprintf(fp, "%d%s", a[j], " ");
 				}
 				sum += a[n - 1] - a[0];
 			}
@@ -253,18 +253,17 @@ void  SSTF(int  a[], int n) {
 	fprintf(fp, "\n");
 	cout << "移动的总道数为 ：" << sum << endl;
 	cout << "平均移动距离为：" << (float)sum / (float)i << endl;
-	fprintf(fp, "移动的总道数为 ：\%d\n",sum);
-	fprintf(fp, "平均移动距离为：\%f\n", (float)sum / (float)i);
+	fprintf(fp, "移动的总道数为 ：%d\n",sum);
+	fprintf(fp, "平均移动距离为：%f\n", (float)sum / (float)i);
 	fprintf(fp, "\n");
 	fclose(fp);
 }
 
 int NAll = 0;
 // 扫描算法(SCAN)
-int SCAN(int a[], int n, int x, int y)
+int SCAN(int a[],int n, int x, int y)
 {
 	FILE *fp;
-	int sn = n;
 		fp = fopen("cipan.txt", "a");//a为追加输出
 	if (!fp)
 	{
@@ -278,31 +277,35 @@ int SCAN(int a[], int n, int x, int y)
 		timeinfo = localtime(&rawtime);
 		fprintf(fp, "当前时间为: %s", asctime(timeinfo));
 		fprintf(fp, "当前的磁盘调度方式为SCAN,磁盘请求序列为:\n");
-		for (int num = 0; num < y - x + 1; num++)
+		for (int num = 0; num < n; num++)
 		{
-			fprintf(fp, "\%d\%s", a[num], " ");
+			fprintf(fp, "%d%s", a[num], " ");
 		}
 		fprintf(fp, "\n");
+		int sum = 0, now;
+		cout << "请输入当前磁道号：";
+		cin >> now; //确定当前磁头所在位置
+		fprintf(fp, "当前磁头位置为: %d", now);
 	int j, l, k, h, m, All;
 	int t = 0;
 	int Temp;
 	int Min;
-	int b[10]; //将随机生成的磁道数数组a[]复制给数组b[] 
+	int b[100]; //将随机生成的磁道数数组a[]复制给数组b[] 
 	int Order;
 	Order = 1;
 	k = y;
 	m = 2;  //控制while语句的执行，即是一定要使当前磁道向内向外都要扫描到
 	All = 0;  //统计全部的磁道数变量
-	CopyL(a, b, 9);  //复制磁道号到临时数组b
+	CopyL(a, b, n);  //复制磁道号到临时数组b
 	cout<<"按照SCAN算法磁道的访问顺序为:"<<endl;
 	fprintf(fp, "按照SCAN算法磁道的访问顺序为:\n");
 	Min = 64000;
 	for (j = x; j <= y; j++)  //寻找与当前磁道号最短寻道的时间的磁道号
 	{
-		if (b[j]>n)  //如果第一个随机生成的磁道号大于当前的磁道号，执行下一句
-			Temp = b[j] - n;  //求出临时的移动距离
+		if (b[j]>sum)  //如果第一个随机生成的磁道号大于当前的磁道号，执行下一句
+			Temp = b[j] - sum;  //求出临时的移动距离
 		else
-			Temp = n - b[j];  //求出临时的移动距离
+			Temp = sum - b[j];  //求出临时的移动距离
 		if (Temp<Min)
 		{
 			Min = Temp;  //Temp临时值赋予Min
@@ -311,12 +314,12 @@ int SCAN(int a[], int n, int x, int y)
 	}
 	All = All + Min;
 	cout<<b[h];
-		fprintf(fp, "\%d",b[h]);
-	if (b[h] >= n) {  //判断磁道的移动方向，即是由里向外还是由外向里
+		fprintf(fp, "%d",b[h]);
+	if (b[h] >= sum) {  //判断磁道的移动方向，即是由里向外还是由外向里
 		Order = 0;
 		t = 1;
 	}
-	n = b[h];
+	sum = b[h];
 	DelInq(b, h, k);  //每个磁道数向前移动一位
 	k--;
 	while (m>0)
@@ -329,9 +332,9 @@ int SCAN(int a[], int n, int x, int y)
 				Min = 64000;
 				for (l = x; l <= k; l++)  //判断离当前磁道最近的磁道号
 				{
-					if (b[l] <= n)
+					if (b[l] <= sum)
 					{
-						Temp = n - b[l];
+						Temp = sum - b[l];
 						if (Temp<Min)
 						{
 							Min = Temp;  //Temp临时值赋予Min
@@ -343,8 +346,8 @@ int SCAN(int a[], int n, int x, int y)
 				{
 					All = All + Min;  //叠加移动距离
 					cout<<"  "<<b[h];
-						fprintf(fp, "\%s\%d", " ",b[h]);
-					n = b[h]; //最近的磁道号作为当前磁道
+						fprintf(fp, "%s%d", " ",b[h]);
+					sum = b[h]; //最近的磁道号作为当前磁道
 					DelInq(b, h, k);
 					k--;
 				}
@@ -360,9 +363,9 @@ int SCAN(int a[], int n, int x, int y)
 				Min = 64000;
 				for (l = x; l <= k; l++)  //判断离当前磁道最近的磁道号
 				{
-					if (b[l] >= n)
+					if (b[l] >= sum)
 					{
-						Temp = b[l] - n;
+						Temp = b[l] - sum;
 						if (Temp<Min)
 						{
 							Min = Temp;   //Temp临时值赋予Min
@@ -374,8 +377,8 @@ int SCAN(int a[], int n, int x, int y)
 				{
 					All = All + Min;  //叠加移动距离
 					cout << "  " << b[h];
-						fprintf(fp, "\%s\%d:", " ", b[h]);
-					n = b[h];  //最近的磁道号作为当前磁道
+						fprintf(fp, "%s%d:", " ", b[h]);
+					sum = b[h];  //最近的磁道号作为当前磁道
 					DelInq(b, h, k);
 					k--;
 				}
@@ -388,10 +391,10 @@ int SCAN(int a[], int n, int x, int y)
 	if ((y - x)>5)
 	{	
 		cout << endl << "移动磁道数:" << All;
-		cout << endl << "平均寻道长度:"<< (float)All /sn;
+		cout << endl << "平均寻道长度:"<< (float)All /n;
 
-			fprintf(fp, "\n移动磁道数:\%d:", All);
-			fprintf(fp, "\n平均寻道长度:\%f:", (float)All /sn);
+			fprintf(fp, "\n移动磁道数:%d:", All);
+			fprintf(fp, "\n平均寻道长度:%f:", (float)All /n);
 		
 	}
 	if (t == 1) {
@@ -425,17 +428,21 @@ void CSCAN(int a[], int n)
 	fprintf(fp, "当前的磁盘调度方式为CSCAN,磁盘请求序列为:\n");
 	for (int num = 0; num < n; num++)
 	{
-		fprintf(fp, "\%d\%s", a[num], " ");
+		fprintf(fp, "%d%s", a[num], " ");
 	}
 	fprintf(fp, "\n");
+	int sum = 0, now;
+	cout << "请输入当前磁道号：";
+	cin >> now; //确定当前磁头所在位置
+	fprintf(fp, "当前磁头位置为: %d", now);
 	int j, h, l, Temp, m, k, All, Last, i;
-	int b[10];  //将随机生成的磁道数数组a[]复制给数组b[] 
+	int b[100];  //将随机生成的磁道数数组a[]复制给数组b[] 
 	int Min;
 	int tmp = 0;
 	m = 2;
 	k = 9;
 	All = 0;   //统计全部的磁道数变量
-	Last = n;
+	Last = now;
 	CopyL(a, b, 9);  //复制磁道号到临时数组b
 	cout<<"按照CSCAN算法磁道的访问顺序为:"<<endl;
 	fprintf(fp, "按照CSCAN算法磁道的访问顺序为:\n");
@@ -447,9 +454,9 @@ void CSCAN(int a[], int n)
 			Min = 64000;
 			for (l = 0; l <= k; l++)
 			{
-				if (b[l] >= n)
+				if (b[l] >= now)
 				{
-					Temp = b[l] - n;
+					Temp = b[l] - now;
 					if (Temp<Min)
 					{
 						Min = Temp;
@@ -461,8 +468,8 @@ void CSCAN(int a[], int n)
 			{
 				All = All + Min;  //统计一共移动的距离
 				cout << "  " << b[h];
-				fprintf(fp, "\%s\%d"," ",b[h]);
-				n = b[h];
+				fprintf(fp, "%s%d"," ",b[h]);
+				now = b[h];
 				Last = b[h];
 				DelInq(b, h, k);
 				k--;
@@ -475,15 +482,15 @@ void CSCAN(int a[], int n)
 			{
 				if (tmp>b[i]) tmp = b[i];
 			}
-			n = tmp;//把最小的磁道号赋给n
+			now = tmp;//把最小的磁道号赋给now
 			Temp = Last - tmp;//求出最大磁道号和最小磁道号的距离差
 			All = All + Temp;
 		}
 	}
 	cout << endl << "移动磁道数:" << All;
 	cout << endl << "平均寻道长度: " << ((float)All) / sn;
-	fprintf(fp, "\n移动磁道数\%d", All);
-	fprintf(fp, "\n平均寻道长度\%f", (float)All / sn);
+	fprintf(fp, "\n移动磁道数%d", All);
+	fprintf(fp, "\n平均寻道长度%f", (float)All / sn);
 	fprintf(fp, "\n");
 	fclose(fp);
 }
@@ -501,9 +508,13 @@ void FSCAN(int a[], int n)
 	fprintf(fp, "当前的磁盘调度方式为FSCAN,磁盘请求序列为:\n");
 	for (int num = 0; num < n; num++)
 	{
-		fprintf(fp, "\%d\%s", a[num], " ");
+		fprintf(fp, "%d%s", a[num], " ");
 	}
 	fprintf(fp, "\n");
+	int sum = 0, now;
+	cout << "请输入当前磁道号：";
+	cin >> now; //确定当前磁头所在位置
+	fprintf(fp, "当前磁头位置为: %d", now);
 	int i, m, k;
 	int b[10];
 	NAll = 0;
@@ -515,13 +526,13 @@ void FSCAN(int a[], int n)
 	fprintf(fp, "\n按照FSCAN算法磁道的访问顺序为:");
 	for (m = 0; m < 2; m++)  //由于限定10磁道数，将10个磁道数分为两组，每组5个磁道数，每个组按照SCAN算法执行，该循环循环2次
 	{
-		n = SCAN(b, n, i + 1, i + 5);
+		now = SCAN(b, now, i + 1, i + 5);
 		i = i + 5;
 	}
 	cout<<endl<<"移动磁道数:"<< NAll;
 	cout<<endl<< "平均寻道长度: "<<((float)NAll)/10;
-	fprintf(fp, "\n移动磁道数:\%d", NAll);
-	fprintf(fp, "\n平均寻道长度:\%f", (float)NAll/10);
+	fprintf(fp, "\n移动磁道数:%d", NAll);
+	fprintf(fp, "\n平均寻道长度:%f", (float)NAll/10);
 	fprintf(fp, "\n");
 	fclose(fp);
 
