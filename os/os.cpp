@@ -471,7 +471,7 @@ void CSCAN(int a[], int n)
 	k = n-1;
 	All = 0;   //统计全部的磁道数变量
 	Last = now;
-	CopyL(a, b, n);  //复制磁道号到临时数组b
+	CopyL(a, b, n-1);  //复制磁道号到临时数组b
 	cout<<"按照CSCAN算法磁道的访问顺序为:"<<endl;
 	fprintf(fp, "按照CSCAN算法磁道的访问顺序为:\n");
 	while (k >= 0)
@@ -544,23 +544,23 @@ void FSCAN(int a[], int n)
 	cin >> now; //确定当前磁头所在位置
 	fprintf(fp, "当前磁头位置为: %d", now);
 	int i, m, k;
-	int b[10];
+	int b[100];
 	NAll = 0;
 	m = 2;
-	k = 9;  //限定10个的磁道数  
+	k = n-1;  //限定10个的磁道数  
 	i = -1;
-	CopyL(a, b, 9);  //复制磁道号到临时数组RLine
+	CopyL(a, b, n-1);  //复制磁道号到临时数组RLine
 	cout<<endl<<"按照FSCAN算法磁道的访问顺序为:";
 	fprintf(fp, "\n按照FSCAN算法磁道的访问顺序为:");
 	for (m = 0; m < 2; m++)  //由于限定10磁道数，将10个磁道数分为两组，每组5个磁道数，每个组按照SCAN算法执行，该循环循环2次
 	{
-		now = SCAN(b, now, i + 1, i + 5);
-		i = i + 5;
+		now = SCAN(b, now, i + 1, i + n/2);
+		i = i + n/2;
 	}
 	cout<<endl<<"移动磁道数:"<< NAll;
-	cout<<endl<< "平均寻道长度: "<<((float)NAll)/10;
+	cout<<endl<< "平均寻道长度: "<<((float)NAll)/n;
 	fprintf(fp, "\n移动磁道数:%d", NAll);
-	fprintf(fp, "\n平均寻道长度:%f", (float)NAll/10);
+	fprintf(fp, "\n平均寻道长度:%f", (float)NAll/n);
 	fprintf(fp, "\n");
 	fclose(fp);
 
